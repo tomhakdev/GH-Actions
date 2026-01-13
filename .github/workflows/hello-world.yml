@@ -9,6 +9,10 @@ on:
         description: 'Who to greet'
         required: true
         default: 'Student'
+      goodbye_name:
+          description: 'Who to say goodbye to'
+          required: true
+          default: 'Student'
 
 jobs:
   logic-test:
@@ -36,3 +40,8 @@ jobs:
         # only runs if the event was a code push
         if: github.event_name == 'push'
         run: echo "This ran because you pushed code to main."
+
+      - name: Manual Goodbye
+        #runs if you triggered it manually via the button
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "Goodbye ${{ github.event.inputs.goodbye_name }}, this ran manually"
