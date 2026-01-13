@@ -1,12 +1,38 @@
-name: First Action
-on: [push] # Event triggering the workflow
+name: Manual event trigger
+on:
+  push:
+    branches: [main]
+  # run the workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      greeting_name:
+        description: 'Who to greet'
+        required: true
+        default: 'Student'
 
 jobs:
-  say-hello:
-    runs-on: ubuntu-latest # The virtual machine environment
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4 # Clones your repo into the runner
+  logic-test:
+    runs-on: ubuntu-latest
+    # Setting an environment variable for the whole job
+    env:
+      COURSE_NAME: "Figuring out GH actions"
 
-      - name: Confirm its Working
-        run: echo "Hello, GH Actions is working!"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Print Context Details
+        run: |
+          echo "Actor: ${{ github.actor }}"
+          echo "Event: ${{ github.event_name }}"
+          echo "Course: $COURSE_NAME"
+
+      - name: Manual Greeting
+        #runs if you triggered it manually via the button
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "Hello ${{ github.event.inputs.greeting_name }}, this ran manually"
+
+      - name: Push Greeting
+        # only runs if the event was a code push
+        if: github.event_name == 'push'
+        run: echo "This ran because you pushed code to main."
