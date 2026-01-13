@@ -1,0 +1,12 @@
+name: First Action
+on: [push] # Event triggering the workflow
+
+jobs:
+  say-hello:
+    runs-on: ubuntu-latest # The virtual machine environment
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4 # Clones your repo into the runner
+
+      - name: Confirm its Working
+        run: echo "Hello, GH Actions is working!"
